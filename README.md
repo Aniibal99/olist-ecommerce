@@ -46,10 +46,10 @@ df_entregas['pedido_con_retraso'] = (
 
 Se ajustó una regresión lineal simple a nivel de pedido, a nivel nacional, para aislar el efecto del retraso sobre la calificación:
 
-​```
+```python
 import statsmodels.formula.api as smf
 modelo = smf.ols('review_score ~ pedido_con_retraso', data=satisfaccion_pais).fit()
-​```
+```
 
 **R² = 0,133** (N=95.824, p < 0,001): el retraso por sí solo explica el 13% de la variabilidad en la calificación de *cada pedido individual*, con una caída promedio de **1,73 puntos** cuando el pedido llega tarde. El 87% restante corresponde a factores no capturados en el modelo (calidad del producto, expectativas personales, etc.) — el objetivo no era explicar la satisfacción del cliente en su totalidad, sino confirmar que el retraso tiene un efecto propio y medible.
 
