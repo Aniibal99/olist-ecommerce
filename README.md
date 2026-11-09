@@ -40,26 +40,26 @@ df_entregas['pedido_con_retraso'] = (
 
 ## Hallazgos
 
-### 1. El retraso impacta la calificación del cliente — y cambia según la cantidad de días.
+### 1. El retraso impacta la calificación del cliente — y el efecto se concentra en la primera semana.
 
-Se ajustó una regresión lineal simple a nivel de pedido, a nivel nacional:
+**¿El retraso predice la calificación de un pedido?**
 
-```python
+Se ajustó una regresión lineal simple a nivel de pedido, a nivel nacional, para aislar el efecto del retraso sobre la calificación:
+
+​```
 import statsmodels.formula.api as smf
-modelo = smf.ols('review_score ~ retraso', data=satisfaccion_pais).fit()
-```
+modelo = smf.ols('review_score ~ pedido_con_retraso', data=satisfaccion_pais).fit()
+​```
 
-**R² = 0,133** (N=95.824, p < 0,001). El retraso por sí solo explica el 13% de la variabilidad en la calificación, con una caída promedio de **1,73 puntos** cuando el pedido llega tarde.
+**R² = 0,133** (N=95.824, p < 0,001): el retraso por sí solo explica el 13% de la variabilidad en la calificación de *cada pedido individual*, con una caída promedio de **1,73 puntos** cuando el pedido llega tarde. El 87% restante corresponde a factores no capturados en el modelo (calidad del producto, expectativas personales, etc.) — el objetivo no era explicar la satisfacción del cliente en su totalidad, sino confirmar que el retraso tiene un efecto propio y medible.
 
-> El modelo no busca explicar la totalidad de la satisfacción del cliente sino aislar específicamente el efecto del retraso.
+**¿Cómo se comporta ese efecto según los días de retraso?**
 
-Para entender mejor ese efecto, se graficó la calificación promedio según los días de retraso, donde la parte negativa indica que el pedido llegó antes de la fecha estimada:
+Para ver la forma de esa relación, se graficó la calificación *promedio* según los días de retraso. Al promediar miles de pedidos por cada día de retraso, el ruido individual que limita el R² se cancela y la tendencia se ve con claridad:
 
 ![Calificación promedio según días de retraso](./assets/calificacion_segun_dias_retraso.png)
 
 Llegar antes de lo estimado no mejora la calificación, pero una vez que el pedido se retrasa, la caída es rápida y se concentra en la primera semana, llegando por debajo de las 2 estrellas. Después del día 7-8, la calificación ya tocó un piso cercano al mínimo de la escala y no sigue empeorando de forma relevante.
-
-> El R²=0.13 mide qué tan bien el retraso predice la calificación de *cada pedido individual*, donde hay mucho ruido por factores no capturados (calidad del producto, expectativas personales, etc.). El gráfico, en cambio, muestra el *promedio* de miles de pedidos por cada día de retraso. Al promediar, ese ruido se cancela y la tendencia central se ve con más claridad.
 
 ### 2. El margen de días prometido explica buena parte del retraso por estado
 
@@ -70,11 +70,11 @@ modelo_margen = smf.ols('tasa_retraso ~ margen_promedio', data=agregado_estado).
 ```
 
 **R² = 0,512** (N=27 estados, p < 0,001). Por cada día adicional de margen entre la fecha estimada y la real, la tasa de retraso baja en promedio 1,09 puntos porcentuales.
+> Nota: la empresa parece asignar la expectativa de entrega por zona geográfica más que por estado individual.
 
 ![Margen de días vs tasa de retraso por estado](./assets/margen_tasaretraso.png)
 
-El gráfico hace sentido con el resultado de R², ya que se puede observar la tendencia aun quitando algunos outliers. Por otra parte, el alza en la tasa de retraso es más pronunciado entre los 8 y 12 días de margen, lo que es consistente con la idea de que recalibrar los márgenes en los estados con plazos más ajustados podría reducir la tasa de retraso. Esta asociación no prueba causalidad por sí sola: el orden temporal (el margen se fija antes del despacho) hace esta dirección plausible.
-> Nota: la empresa parece asignar la expectativa de entrega por zona geográfica más que por estado individual.
+El gráfico es consistente con el resultado de R², ya que se puede observar la tendencia aun quitando algunos outliers. Por otra parte, el alza en la tasa de retraso es más pronunciado entre los 8 y 12 días de margen, lo que es consistente con la idea de que recalibrar los márgenes en los estados con plazos más ajustados podría reducir la tasa de retraso. Esta asociación no prueba causalidad por sí sola: el orden temporal (el margen se fija antes del despacho) hace esta dirección plausible.
 
 ### 3. RJ: top 7 en tasa de retraso. ¿mal margen?
 
@@ -87,6 +87,8 @@ Con los datos disponibles **no es posible aislar la causa raíz** de ese pico na
 ## Conclusión
 
 La tasa de retraso varía significativamente entre estados, y una parte importante de esa variación se explica por qué tan ajustado es el margen entre la fecha de entrega estimada y la real. El retraso, a su vez, tiene un efecto medible y significativo sobre la satisfacción del cliente.
+
+El mapa siguiente resume la distribución geográfica del país:
 
 ![Mapa de brasil separado por estados y zonas](./assets/mapa_brasil.png)
 
