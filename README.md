@@ -73,8 +73,7 @@ modelo_margen = smf.ols('tasa_retraso ~ margen_promedio', data=agregado_estado).
 
 ![Margen de días vs tasa de retraso por estado](./assets/margen_tasaretraso.png)
 
-El gráfico hace sentido con el resultado de R², ya que se puede observar la tendencia aun quitando algunos outliers. Por otra parte, el alza en la tasa de retraso es más pronunciado entre los 8 y 12 días de margen, lo que sugiere que ajustar los márgenes en los estados con plazos más ajustados disminuiría la tasa de retraso.
-
+El gráfico hace sentido con el resultado de R², ya que se puede observar la tendencia aun quitando algunos outliers. Por otra parte, el alza en la tasa de retraso es más pronunciado entre los 8 y 12 días de margen, lo que es consistente con la idea de que recalibrar los márgenes en los estados con plazos más ajustados podría reducir la tasa de retraso. Esta asociación no prueba causalidad por sí sola: el orden temporal (el margen se fija antes del despacho) hace esta dirección plausible.
 > Nota: la empresa parece asignar la expectativa de entrega por zona geográfica más que por estado individual.
 
 ### 3. RJ: top 7 en tasa de retraso. ¿mal margen?
@@ -91,7 +90,7 @@ La tasa de retraso varía significativamente entre estados, y una parte importan
 
 ![Mapa de brasil separado por estados y zonas](./assets/mapa_brasil.png)
 
-Cruzando la tabla de margen por estado con el mapa de tasa de retraso, el **top 6 de estados con mayor tasa de retraso son todos del Nordeste** (AL, MA, PI, CE, SE, BA), con expectativas de entrega de 30-35 días. La curva de calificación según días de retraso, comparando Nordeste con el nivel nacional, muestra el mismo patrón, caída pronunciada en la primera semana de atraso, confirmando que una mejora en la tasa de retraso ahí puede convertirse en una mayor satisfacción.
+Cruzando la tabla de margen por estado con el mapa de tasa de retraso, el **top 6 de estados con mayor tasa de retraso son todos del Nordeste** (AL, MA, PI, CE, SE, BA), con expectativas de entrega de 30-35 días. La curva de calificación según días de retraso, comparando Nordeste con el nivel nacional, muestra el mismo patrón, caída pronunciada en la primera semana de atraso, lo que sugiere que una mejora en la tasa de retraso ahí se traduciría en mejor satisfacción.
 
 ![Calificación promedio según días de retraso: Nordeste vs. Nacional](./assets/nordeste_vs_nacional.png)
 
